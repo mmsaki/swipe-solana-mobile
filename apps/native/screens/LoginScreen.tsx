@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import useAuth from "../hooks/useAuth";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { transact } from "@solana-mobile/mobile-wallet-adapter-protocol";
 
@@ -16,6 +16,7 @@ const phantomLogo = require("../assets/logos/phantom-icon-purple.png");
 const torusLogo = require("../assets/logos/torus-icon-white.png");
 
 const LoginScreen = () => {
+  const { singInWithPantom } = useAuth();
   const user = "meek";
   console.log("user: ", user);
   return (
@@ -29,11 +30,12 @@ const LoginScreen = () => {
       <Text style={styles.useWalletText}>Use wallet to continue</Text>
       <View style={styles.buttonGrid}>
         <BlueButton
-          width={24}
-          height={24}
-          top={-3}
-          left={-5}
+          logoWidth={24}
+          logoHeight={24}
+          logoTop={-3}
+          logoLeft={20}
           logo={phantomLogo}
+          width={380}
           bg="#0F62FF"
           text="Sign in with Phantom Wallet"
           onPress={() => {
@@ -48,11 +50,16 @@ const LoginScreen = () => {
         ></BlueButton>
         <View style={{ padding: 16 }}></View>
         <BlueButton
-          width={21}
-          height={21}
-          top={-3}
-          left={85}
-          logo={torusLogo} bg="#393939" text="Torus"></BlueButton>
+          logoWidth={21}
+          logoHeight={21}
+          logoTop={-3}
+          logoLeft={110}
+          width={380}
+          height={50}
+          logo={torusLogo}
+          bg="#393939"
+          text="Torus"
+        ></BlueButton>
         <View style={{ padding: 16 }}></View>
         <BlueButton bg="#393939" text="Solflare"></BlueButton>
         <Text
@@ -78,21 +85,45 @@ export interface ButtonProps {
   logo?: any;
   width?: number;
   height?: number;
-  left?: number;
-  top?: number;
+  logoWidth?: number;
+  logoHeight?: number;
+  logoLeft?: number;
+  logoTop?: number;
   onClick?: (event: GestureResponderEvent) => void;
   onPress?: () => void;
 }
 
-export function BlueButton({ text, onClick, bg, logo, width, height, left, top }: ButtonProps) {
+export function BlueButton({
+  text,
+  onClick,
+  bg,
+  logo,
+  width,
+  height,
+  logoLeft,
+  logoTop,
+  logoWidth,
+  logoHeight,
+}: ButtonProps) {
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: bg }]}
+      style={[
+        styles.button,
+        { backgroundColor: bg, width: width, height: height },
+      ]}
       onPress={onClick}
     >
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <Image
-          style={[styles.walletLogo, { width: width, height: height, left: left, top: top }]}
+          style={[
+            styles.walletLogo,
+            {
+              width: logoWidth,
+              height: logoHeight,
+              left: logoLeft,
+              top: logoTop,
+            },
+          ]}
           source={logo}
         />
         <Text style={styles.Buttontext}>{text}</Text>
@@ -155,8 +186,6 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
   walletLogo: {
-    width: 24,
-    height: 24,
     marginRight: 12,
     position: "absolute",
     left: -5,
