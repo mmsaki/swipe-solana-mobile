@@ -11,18 +11,31 @@
     "dev": "yarn start"
   },
   "dependencies": {
+    "@react-navigation/native": "^6.1.2",
+    "@react-navigation/native-stack": "^6.9.8",
+    "@solana-mobile/mobile-wallet-adapter-protocol": "^1.0.0",
+    "@svgr/core": "^6.5.1",
+    "@svgr/plugin-svgo": "^6.5.1",
+    "electron-to-chromium": "^1.4.284",
     "expo": "^45.0.6",
     "expo-status-bar": "~1.3.0",
+    "node-releases": "^2.0.8",
+    "path-dirname": "^1.0.2",
     "react": "18.2",
     "react-dom": "18.1",
     "react-native": "0.68.2",
+    "react-native-safe-area-context": "^4.5.0",
+    "react-native-screens": "^3.19.0",
+    "react-native-svg": "^13.7.0",
     "react-native-web": "^0.18.9",
+    "tailwind-rn": "^4.2.0",
     "ui": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@types/react": "^18.0.22",
     "@types/react-native": "^0.69.15",
+    "react-native-svg-transformer": "^1.0.0",
     "typescript": "^4.7.4"
   },
   "private": true
