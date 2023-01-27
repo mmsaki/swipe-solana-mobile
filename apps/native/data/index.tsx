@@ -1,6 +1,6 @@
 export const profiles = [
   {
-    publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfYJLQBUepdJsK",
+    publicKey: "7QucptjcBrQNfhcf9eDroaSvM9Q5F5nfYJLQBUepdJsK",
     account: {
       owner: "GrDXZruQ2Ypq3VBGT3UnDZVdf4Z8zGWTknQh6qvSjFCs",
       userName: "msaki",
@@ -10,7 +10,7 @@ export const profiles = [
     },
   },
   {
-    publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfYJLQBUepdJsK",
+    publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfFJLQBUepdJsK",
     account: {
       owner: "DQvN6DeJQNE3iYMk7YR8o89f4kNHCmki1XbALY6ygKLp",
       userName: "zenits",
@@ -20,20 +20,40 @@ export const profiles = [
     },
   },
   {
+    publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfYRLQBUepdJsK",
+    account: {
+      owner: "DQvN6DeJQNE3iYMk7YR8o89f4kNHCmki1XbALY6ygKLp",
+      userName: "elonmusk",
+      last_post: "3",
+      matches: "2",
+      uri: "https://i.seadn.io/gae/ZVVSA4Jtfc3tXMo053Xfus4K0PGdvvN1ZrUV863YPpv8xAjkpOTgDulwuEhuqr3mLuxxvc63R46cQi6ZMj0rhwDrp-kEt9Xz-JHcxw?auto=format&w=1400&fr=1",
+    },
+  },
+  {
+    publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfYJLQBUepdJsF",
+    account: {
+      owner: "DQvN6DeJQNE3iYMk7YR8o89f4kNHCmki1XbALY6ygKLp",
+      userName: "jack.eth",
+      last_post: "3",
+      matches: "2",
+      uri: "https://images-ext-2.discordapp.net/external/GlRX_CbdM-7w3rNyK3Ot04z-lWTDnIC4wrdZFK7Alns/%3Fauto%3Dformat%26w%3D1400%26fr%3D1/https/i.seadn.io/gae/ob74scPl5AxLISNZKxgXYQTZcnsxtgZVRoSFj-AT-p1rtZ_-byJho4OsIeeKD5Ir9sRs_gs_7r-CjTk20eTqzjQukmDf5LCsMaLA",
+    },
+  },
+  {
     publicKey: "5RcZCQxfwu7XHJSE3HMtLXBw8b67gHK9V3jYi2drvzrY",
     account: {
       owner: "FeMKLRTCw7VbjM2N1ZntEeAT2TvhgBxe4k2tZ9AeqrCv",
-      username: "swindler",
+      userName: "money",
       lastPost: 0,
       matches: 0,
-      uri: "https://i.seadn.io/gae/ZVVSA4Jtfc3tXMo053Xfus4K0PGdvvN1ZrUV863YPpv8xAjkpOTgDulwuEhuqr3mLuxxvc63R46cQi6ZMj0rhwDrp-kEt9Xz-JHcxw?auto=format&w=1400&fr=1",
+      uri: "https://i.seadn.io/gae/GkIpZM2I-uXfc_7hO_8KrdnlFTysd4LVZhL1Gygu9nKHpjisxm0VLd6WaxqME1dy_iBTTgDKFwq58st3t60LdgA4anp4Rq4BKPsdu_w?auto=format&w=1400&fr=1",
     },
   },
   {
     publicKey: "7QucptjcBrQNfhcf9iDroaSvM9Q5F5nfYJLQBUepdJsK",
     account: {
       owner: "2Rekz32EkpAqk3BE1kjJrC8GuD8D2DWRxoHuU6EprNj2",
-      username: "test123",
+      userName: "taylor",
       lastPost: 1,
       matches: 0,
       uri: "https://images-ext-2.discordapp.net/external/fcwL-78hWWAXxvrbu7PvuNwCAa96DME3RN4S8xYbBKA/%3Fauto%3Dformat%26w%3D1400%26fr%3D1/https/i.seadn.io/gae/_89fP0a5Y_cyT4nkxHpak4BP7zKet26w1NGOXGuZ3ZLVuG7HJ5llq73f_N_86-TotEKU_g84YEzrQ-FmfMn7juLmdiokBCu8GeqdcQU",
