@@ -11,7 +11,7 @@ export interface ButtonProps {
   onClick?: (event: GestureResponderEvent) => void;
 }
 
-export function Button({ text, onClick }: ButtonProps) {
+export default function Button({ text, onClick }: ButtonProps) {
   return (
     <TouchableOpacity style={styles.button} onPress={onClick}>
       <Text style={styles.text}>{text}</Text>
