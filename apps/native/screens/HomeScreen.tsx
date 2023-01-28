@@ -21,20 +21,9 @@ const chatPage = "Chat";
 const HomeScreen = () => {
   const navigation = useNavigation();
   return (
+    <>
+      <NavHeader />
     <SafeAreaView style={styles.layout}>
-      <ScrollView horizontal style={styles.stories}>
-        {profiles.map((profile: any) => {
-          return (
-            <Pressable onPress={() => navigation.navigate(chatPage)}>
-              <StoryPost
-                key={profile.publicKey}
-                uri={profile.account.uri}
-                userName={profile.account.userName}
-              />
-            </Pressable>
-          );
-        })}
-      </ScrollView>
       <ScrollView style={styles.cardContainder}>
         {posts.map((post: any) => {
           return (
@@ -50,10 +39,23 @@ const HomeScreen = () => {
       <Footer />
       <StatusBar style="auto" />
     </SafeAreaView>
+    </>
   );
 };
 
 export default HomeScreen;
+
+function NavHeader() {
+  const navigation = useNavigation();
+  return (
+    <View style={styles.navHeader}>
+      <Image
+        source={{ uri: "https://img.icons8.com/ios/512/name--v1.png" }}
+        style={{ height: 50, width: 50 }}
+      />
+    </View>
+  );
+}
 
 function InputWithLabel(props: any) {
   const { label, placeholder, value, onChangeText } = props;
@@ -69,15 +71,6 @@ function InputWithLabel(props: any) {
   );
 }
 
-const StoryPost = (props: any) => {
-  return (
-    <View style={{ marginRight: 8, marginTop: 5 }}>
-        <Image style={styles.avatar} source={{ uri: props.uri }} />
-        <Text style={styles.userName}>{props.userName}</Text>
-    </View>
-  );
-};
-
 function SwipePost(props: any) {
   return (
     <View style={styles.card}>
@@ -92,36 +85,33 @@ function SwipePost(props: any) {
   );
 }
 
+function ActionButton(props: any) {
+  return (
+    <View style={styles.actionButton}>
+      <Button title="" onPress={props.onPress} />
+      <Pressable onPress={props.onPress}>
+        <Image style={[styles.actionButtonImage, {height: props.height, width: props.width}]} source={props.image} />
+      </Pressable>
+    </View>
+  );
+}
+
 function Footer() {
   const navigation = useNavigation();
   return (
     <View style={styles.footer}>
       <Button
-        title="Go to Profile"
-        onPress={() => navigation.navigate(profilePage)}
+        title="Some is Down here"
       />
     </View>
   );
 }
 
-
-interface Profile {
-  publicKey: string;
-  account: {
-    owner?: string;
-    userName?: string;
-    last_post?: string;
-    matches?: string;
-    uri?: string;
-  };
-}
-
-
-
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    // backgroundColor: "#fff",
+    // backgroundColor: "#161517",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
@@ -133,13 +123,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
   cardContainder: {
-    height: 600,
+    height: 550,
   },
-  card: {
-  },
+  card: {},
   image: {
     backgroundColor: "gray",
-    height: 700,
+    height: 690,
     width: 420,
     borderRadius: 20,
   },
@@ -159,6 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
+    color: "#FFFFFF",
   },
   title: {
     position: "absolute",
@@ -181,4 +171,26 @@ const styles = StyleSheet.create({
     height: 50,
   },
   footerButton: {},
+  navHeader: {
+    flexDirection: "row",
+    marginTop: 0,
+    paddingTop: 50,
+    paddingBottom: 10,
+    // backgroundColor: "#161517",
+  },
+  profilePicture: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    marginLeft: 12,
+    marginBottom: 10,
+  },
+  actionButton: {},
+  actionButtonImage: {
+    position: "absolute",
+    width: 20,
+    height: 20,
+    left: 320,
+    top: 10,
+  },
 });
