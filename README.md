@@ -4,7 +4,7 @@ A simple mobile app to write movie reviews on the Solana blockchain - powered by
 
 ## What we're building
 
-https://user-images.githubusercontent.com/15083324/184767148-6e34daba-d8c3-4afe-a6b3-bec5bf6aa459.mp4
+https://github.com/mmsaki/swipe-solana-mobile/blob/main/assets/RPReplay_Final1675127046.MP4
 
 ## Instructions
 
