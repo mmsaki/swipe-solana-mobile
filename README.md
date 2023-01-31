@@ -10,7 +10,7 @@ https://user-images.githubusercontent.com/15083324/184767148-6e34daba-d8c3-4afe-
 
 1. Download this repository's starter repo
 ```
-git clone -b starter https://github.com/phantom-labs/deep-links-movie-tutorial.git
+git clone https://github.com/mmsaki/swipe-solana-mobile.git
 ```
 2. Install dependencies
 ```
