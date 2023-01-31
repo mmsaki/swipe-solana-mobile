@@ -3,8 +3,9 @@
 A simple mobile app to meet and chat with friends on the Solana blockchain - build for Encode Club Solana Hackathon.
 
 Contributors:
-- Meek Msaki - Front-End, Rust Developer/Solana Smart Contract Dev
+
 - Martins - Graphic Desgin, UX/UI, Project Lead
+- Meek Msaki - Front-End, Rust Developer/Solana Smart Contract Dev
 
 ## What we're building
 
