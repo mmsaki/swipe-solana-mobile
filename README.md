@@ -1,12 +1,16 @@
-# Phantom Deeplinks Tutorial
+# Solana Swipe App
 
-A simple mobile app to write movie reviews on the Solana blockchain - powered by Phantom deeplinks. This app should be referenced in tandem with our walkthrough: The Complete Guide to Phantom Deeplinks.
+A simple mobile app to meet and chat with friends on the Solana blockchain - build for Encode Club Solana Hackathon.
+
+Contributors:
+- Meek Msaki - Front-End, Rust Developer/Solana Smart Contract Dev
+- Martins - Graphic Desgin, UX/UI, Project Lead
 
 ## What we're building
 
 ![image](./assets/mobile-application.png)
 
-![swipe](./assets/profile-posts.png)
+<!-- ![swipe](./assets/profile-posts.png) -->
 
 ## Instructions
 
