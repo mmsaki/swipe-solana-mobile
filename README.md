@@ -17,7 +17,7 @@ Contributors:
 
 1. Download this repository's starter repo
 ```
-git clone -b starter https://github.com/phantom-labs/deep-links-movie-tutorial.git
+git clone -b starter https://github.com/mmsaki/swipe-solana-mobile.git
 ```
 2. Install dependencies
 ```
