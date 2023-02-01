@@ -24,7 +24,7 @@ jobs:
           channel: pr-${{ github.event.number }}
         id: preview
       
-      - name:💬 Comment deployment link
+      - name: 💬 Comment deployment link
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
