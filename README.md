@@ -34,7 +34,7 @@ yarn start
 1. Run build and download app to your iPhone. For ios 16 [enable developer mode](https://docs.expo.dev/guides/ios-developer-mode/).
 
 ```bash
-eas build --profile preview --platform ios  
+eas build --profile development --platform ios  
 ```
 
 ## Acknowledgements
