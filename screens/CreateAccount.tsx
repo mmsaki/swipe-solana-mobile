@@ -1,28 +1,71 @@
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from "react-native";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
 import { Button } from "../components/Button";
-import CreateUser from "../components/CreateUser";
-import ActionSheet from "react-native-actions-sheet";
-import { useNavigation } from "@react-navigation/native";
-import useGlobalAuth from "../state/useGlobalState";
 import UserSVG from "../assets/user-profile.svg";
 import { User } from "../models/User";
 import { PROGRAM_ID } from "../constants";
+import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
+import usePhantomConnection from "../hooks/WalletContextProvider";
 
 const profilePicture = require("../assets/favicon.png");
 
-const CreateAccount = (props: any) => {
-  const { signAndSendTransaction } = useGlobalAuth();
-  const navigation = useNavigation()
-  const [username, setUsername] = useState("")
-  const [imageURL, setImageURL] = useState("")
-  const inclompleteProfile = !username || !imageURL
-  
 
-  const createUserAccount = () => { 
+const CreateAccount = () => {
+  const [username, setUsername] = useState("");
+  const [uri, setUri] = useState("");
+  const {
+    sharedSecret,
+    dappKeyPair,
+    session,
+    phantomWalletPublicKey,
+    connection,
+    signAndSendTransaction,
+  } = usePhantomConnection();
 
-  }
+  const inclompleteProfile = !username || !uri;
 
+  const handleSubmit = async () => {
+    if (!phantomWalletPublicKey) return;
+    const user = new User(username, uri);
+    const buffer = user.serialize();
+    const [pda] = await PublicKey.findProgramAddress(
+      [new PublicKey(phantomWalletPublicKey).toBuffer(), Buffer.from("user")],
+      new PublicKey(PROGRAM_ID)
+    );
+    const instruction = new TransactionInstruction({
+      keys: [
+        {
+          pubkey: new PublicKey(phantomWalletPublicKey),
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: pda,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+      data: buffer,
+      programId: new PublicKey(PROGRAM_ID),
+    });
+    const transaction = new Transaction();
+    transaction.add(instruction);
+
+    const signedTransaction = await signAndSendTransaction(transaction);
+    console.log("signedTransaction", signedTransaction);
+  };
   return (
     <View style={styles.layout}>
       <Text style={styles.header}>Create Account</Text>
@@ -38,8 +81,8 @@ const CreateAccount = (props: any) => {
       <Text style={styles.labelText}>Step 2: Enter Profile Image URL</Text>
       <TextInput
         placeholder="Enter your profile image URL"
-        value={imageURL}
-        onChangeText={setImageURL}
+        value={uri}
+        onChangeText={setUri}
         style={styles.inputText}
       />
       <TouchableOpacity
@@ -48,7 +91,7 @@ const CreateAccount = (props: any) => {
           styles.button,
           inclompleteProfile ? { backgroundColor: "#4C4C4C" } : styles.button,
         ]}
-        onPress={createUserAccount}
+        onPress={handleSubmit}
       >
         <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
@@ -59,7 +102,6 @@ const CreateAccount = (props: any) => {
 export default CreateAccount;
 
 function ProfilePicture(props: any) {
-  const { image } = props;
   return (
     <View>
       <Text style={[styles.labelText, { paddingLeft: -5 }]}>
@@ -136,3 +178,7 @@ const styles = StyleSheet.create({
     color: "#F8F9FD",
   },
 });
+function async() {
+  throw new Error("Function not implemented.");
+}
+
