@@ -13,7 +13,7 @@ import BookmarkIcon from "../assets/bookmark-icon.svg";
 import InfoIcon from "../assets/info-icon.svg";
 import FavoriteIcon from "../assets/favorite-icon.svg";
 import LeaderBoardIcon from "../assets/leaderboard-icon.svg";
-import useGlobalAuth from "../state/useGlobalState";
+import usePhantomConnection from "../hooks/WalletContextProvider";
 
 interface Profile {
   publicKey: string;
@@ -28,8 +28,7 @@ interface Profile {
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const { phantomWalletPublicKey } = useGlobalAuth();
-  const user = phantomWalletPublicKey.toString();
+  const { phantomWalletPublicKey, signMessage, signAllTransactions } = usePhantomConnection();
   const swipeRef = useRef(null);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -38,7 +37,12 @@ const HomeScreen = () => {
   });
 
   useLayoutEffect(() => {
-    if (profiles.length > 0 && !profiles.find((profile) => profile.account.owner === user)) {
+    if (
+      profiles.length > 0 &&
+      !profiles.find(
+        (profile) => profile.account.owner === phantomWalletPublicKey
+      )
+    ) {
       navigation.navigate("Create Account");
     }
   }, []);
@@ -103,11 +107,13 @@ const HomeScreen = () => {
       <View style={styles.card}>
         <Swiper
           ref={swipeRef}
-          cards={posts.filter(card => card.account.owner !== user)}
+          cards={posts.filter(
+            (card) => card.account.owner !== phantomWalletPublicKey
+          )}
           stackSize={10}
           cardIndex={0}
           disableBottomSwipe={true}
-          backgroundColor={"transparent"}
+          backgroundColor={"transparent"}r
           stackScale={2}
           stackSeparation={10}
           childrenOnTop={true}
@@ -155,7 +161,7 @@ const HomeScreen = () => {
               <NopeIcon width={50} height={50} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity >
             <View style={styles.button}>
               <BookmarkIcon width={40} height={40} />
             </View>
