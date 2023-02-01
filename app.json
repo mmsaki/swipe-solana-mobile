@@ -2,33 +2,58 @@
   "expo": {
     "name": "swipe",
     "description": "A React Native app that allows users to swipe through solana profiles.",
-    "slug": "swipe-solana",
+    "slug": "swipe",
     "version": "1.0.0",
     "scheme": "swipe-app",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-blue.png",
     "userInterfaceStyle": "light",
     "githubUrl": "https://github.com/mmsaki/swipe-solana-mobile",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#161517"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.msaki.swipe"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#161517"
-      }
+      },
+      "package": "com.msaki.swipe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "01c3225d-a17f-4770-a3e5-1bfc3edcec81"
+      }
+    },
+    "owner": "msaki",
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "13.0"
+          }
+        }
+      ]
+    ]
   }
 }
