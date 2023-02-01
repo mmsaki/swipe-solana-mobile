@@ -1,14 +1,13 @@
-import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigator from "./StackNavigator";
-import { GlobalProvider } from "./state/useGlobalState";
+import { WalletContextProvider } from "./hooks/WalletContextProvider";
 
 export default function Native() {
   return (
-    <NavigationContainer>
-      <GlobalProvider>
+    <WalletContextProvider>
+      <NavigationContainer>
         <StackNavigator />
-      </GlobalProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </WalletContextProvider>
   );
 }
