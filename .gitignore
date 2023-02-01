@@ -12,3 +12,6 @@ web-build/
 
 # macOS
 .DS_Store
+ios/certs/*
+api-6557810103884100244-155-7cc28e96b163.json
+credentials.json
