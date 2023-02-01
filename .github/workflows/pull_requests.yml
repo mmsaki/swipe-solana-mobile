@@ -18,7 +18,7 @@ jobs:
           expo-version: "3.5.0"
           token: ${{ secrets.EXPO_TOKEN }}
         
-      - name:📷 Publish to Expo & create a QR code
+      - name: 📷 Publish to Expo & create a QR code
         uses: expo/expo-preview-action@v1
         with:
           channel: pr-${{ github.event.number }}
