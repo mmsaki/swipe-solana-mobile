@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "scheme": "swipe-app",
     "orientation": "portrait",
-    "icon": "./assets/icon-blue.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "githubUrl": "https://github.com/mmsaki/swipe-solana-mobile",
     "splash": {
