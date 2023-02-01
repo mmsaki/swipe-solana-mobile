@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - main
+      - development
+      - preview
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,4 +28,4 @@ jobs:
         run: yarn install
 
       - name: 🚀 Build app
-        run: eas build --non-interactive --platform ios
+        run: eas build --non-interactive --platform all
