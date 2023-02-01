@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/config-plugins": "^4.1.0",
     "@project-serum/anchor": "^0.26.0",
     "@project-serum/borsh": "^0.2.5",
     "@react-navigation/native": "^6.1.2",
