@@ -1,47 +1,60 @@
-name: update
-on: push
-
+on:
+  push:
+    branches:
+      - main
 jobs:
-  update:
-    name: EAS Update
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check for EXPO_TOKEN
-        run: |
-          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
-            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
-            exit 1
-          fi
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: 16.x
           cache: yarn
 
-      - name: Setup Expo
+      - name: 🏗 Setup Expo and EAS
         uses: expo/expo-github-action@v7
         with:
           expo-version: latest
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Find yarn cache
-        id: yarn-cache-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: 📦 Install dependencies
+        run: yarn install
 
-      - name: Restore cache
-        uses: actions/cache@v2
+      - name: 🚀 Build app
+        run: eas build --non-interactive
+
+on: [pull_request]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
         with:
-          path: ${{ steps.yarn-cache-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          node-version: 16.x
+          cache: yarn
 
-      - name: Install dependencies
-        run: yarn install --immutable
+      - name: 🏗 Setup Expo
+        uses: expo/expo-github-action@v7
+        with:
+          expo-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: Publish update
-        run: eas update --auto
+      - name: 📦 Install dependencies
+        run: yarn install
+
+      - name: 🚀 Publish preview
+        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive
+
+      - name: 💬 Comment preview
+        uses: expo/expo-github-action/preview-comment@v7
+        with:
+          channel: pr-${{ github.event.number }}
