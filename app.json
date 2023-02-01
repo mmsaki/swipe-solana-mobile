@@ -42,7 +42,7 @@
     "owner": "msaki",
     "plugins": [
       [
-        "expo-build-properties",
+        "/node_modules/expo-build-properties",
         {
           "android": {
             "compileSdkVersion": 31,
