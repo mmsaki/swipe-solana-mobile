@@ -1,22 +1,25 @@
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Login from "./screens/Login";
 import HomeScreen from "./screens/HomeScreen";
 import Profile from "./screens/Profile";
 import Chat from "./screens/Chat";
-import useGlobalAuth from "./state/useGlobalState";
-import ModalScreen from "./screens/ModalScreen";
 import LeaderBoardScreen from "./screens/LeaderBoardScreen";
 import CreateAccount from "./screens/CreateAccount";
 import MatchScreen from "./screens/MatchScreen";
+import usePhantomConnection from "./hooks/WalletContextProvider";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const { phantomWalletPublicKey } = useGlobalAuth();
+  const { session, phantomWalletPublicKey } =
+    usePhantomConnection();
+
+  console.log(phantomWalletPublicKey);
+
   return (
     <Stack.Navigator>
       {phantomWalletPublicKey ? (
@@ -29,7 +32,6 @@ export default function App() {
             screenOptions={{ presentation: "modal", headerShown: false }}
           >
             <Stack.Screen name="Profile" component={Profile} />
-            <Stack.Screen name="Modal" component={ModalScreen} />
             <Stack.Screen name="LeaderBoard" component={LeaderBoardScreen} />
           </Stack.Group>
           <Stack.Group
@@ -42,8 +44,8 @@ export default function App() {
           </Stack.Group>
         </>
       ) : (
-          <Stack.Screen name="Login" component={Login} />
-        )}
+        <Stack.Screen name="Login" component={Login} />
+      )}
     </Stack.Navigator>
   );
 }
