@@ -28,7 +28,7 @@ const onSignAndSendTransactionRedirectLink = Linking.createURL(
 const connection = new Connection(clusterApiUrl("devnet"));
 
 const GlobalContext = createContext({
-  isConnected: null,
+  connection: Connection,
   program: undefined,
   userAccount: PublicKey,
   deeplink: "",
@@ -61,14 +61,6 @@ export const GlobalProvider = ({ children }: any) => {
   const [submitting, setSubmitting] = useState(false);
 
   const actionSheetRef = useRef<ActionSheet>(null);
-
-  useEffect(() => {
-    if (!phantomWalletPublicKey) {
-      setIsConnected(false);
-    } else {
-      setIsConnected(true);
-    }
-  }, []);
 
   // Initialize our app's deeplinking protocol on app start-up
   useEffect(() => {
@@ -150,7 +142,7 @@ export const GlobalProvider = ({ children }: any) => {
       console.log("signAndSendTrasaction: ", signAndSendTransactionData);
       Toast.show({
         type: "success",
-        text1: "Review submitted 🎥",
+        text1: "Review submitted transaction ☺️",
         text2: signAndSendTransactionData.signature,
       });
       setLoading(false);
@@ -225,7 +217,6 @@ export const GlobalProvider = ({ children }: any) => {
   const memo = useMemo(
     () => ({
       phantomWalletPublicKey,
-      isConnected,
       connect,
       disconnect,
       signAndSendTransaction,
