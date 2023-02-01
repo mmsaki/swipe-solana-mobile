@@ -1,17 +1,13 @@
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from "react-native";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../components/Button";
-import CreateUser from "../components/CreateUser";
-import ActionSheet from "react-native-actions-sheet";
-import { useNavigation } from "@react-navigation/native";
-import useGlobalAuth from "../state/useGlobalState";
 import UserSVG from "../assets/user-profile.svg";
+import usePhantomConnection from "../hooks/WalletContextProvider";
 
 const profilePicture = require("../assets/favicon.png");
 
 const EditProfile = (props: any) => {
-  const { signAndSendTransaction } = useGlobalAuth();
-  const navigation = useNavigation()
+  const { signAndSendTransaction, disconnect } = usePhantomConnection();
   const [username, setUsername] = useState("")
   const [imageURL, setImageURL] = useState("")
   const inclompleteProfile = !username || !imageURL
@@ -48,6 +44,12 @@ const EditProfile = (props: any) => {
         onPress={createUserAccount}
       >
         <Text style={styles.buttonText}>Edit Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { bottom: 80 }]}
+        onPress={disconnect}
+      >
+        <Text style={styles.buttonText}>Disconnect</Text>
       </TouchableOpacity>
     </View>
   );
@@ -125,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     alignSelf: "center",
-    bottom: 100,
+    bottom: 150,
   },
   buttonText: {
     fontSize: 20,

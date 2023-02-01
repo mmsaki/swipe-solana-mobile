@@ -11,6 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import useGlobalAuth from "../state/useGlobalState";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../assets/logo.svg";
+import usePhantomConnection from "../hooks/WalletContextProvider";
 
 
 const phantomLogo = require("../assets/logos/phantom-icon-purple.png")
@@ -18,7 +19,7 @@ const torusLogo = require("../assets/logos/torus-icon-white.png")
 
 const LoginScreen = (props: any) => {
   const navigation = useNavigation();
-  const { connect, loading } = useGlobalAuth();
+  const { connect } = usePhantomConnection();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
