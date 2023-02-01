@@ -111,7 +111,7 @@ const HomeScreen = () => {
           stackScale={2}
           stackSeparation={10}
           childrenOnTop={true}
-          infinite={true}
+          infinite={false}
           onSwipedLeft={(cardIndex: any) => {
             console.log("PASS");
             swipeLeft(cardIndex);
