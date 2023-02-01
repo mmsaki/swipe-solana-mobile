@@ -6,6 +6,8 @@ import ActionSheet from "react-native-actions-sheet";
 import { useNavigation } from "@react-navigation/native";
 import useGlobalAuth from "../state/useGlobalState";
 import UserSVG from "../assets/user-profile.svg";
+import { User } from "../models/User";
+import { PROGRAM_ID } from "../constants";
 
 const profilePicture = require("../assets/favicon.png");
 
@@ -15,9 +17,10 @@ const CreateAccount = (props: any) => {
   const [username, setUsername] = useState("")
   const [imageURL, setImageURL] = useState("")
   const inclompleteProfile = !username || !imageURL
+  
 
   const createUserAccount = () => { 
-    
+
   }
 
   return (
