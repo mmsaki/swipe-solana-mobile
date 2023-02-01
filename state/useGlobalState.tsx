@@ -155,7 +155,7 @@ export const GlobalProvider = ({ children }: any) => {
     const params = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
       cluster: "devnet",
-      app_url: "https://solana-swipe-app.vercel.app/",
+      app_url: "com.msaki.swipe",
       redirect_link: onConnectRedirectLink,
     });
     const url = buildUrl("connect", params);
