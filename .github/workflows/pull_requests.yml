@@ -1,11 +1,6 @@
-on:
-  push:
-    branches:
-      - main
-      - development
-      - preview
+on: [pull_request]
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
@@ -17,15 +12,19 @@ jobs:
           node-version: 16.x
           cache: yarn
 
-      - name: 🏗 Setup Expo and EAS
+      - name: 🏗 Setup Expo
         uses: expo/expo-github-action@v7
         with:
           expo-version: latest
-          eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
         run: yarn install
 
-      - name: 🚀 Build app
-        run: eas build --non-interactive --platform all
+      - name: 🚀 Publish preview
+        run: expo publish --release-channel=pr-${{ github.event.number }} --non-interactive --platform ios
+
+      - name: 💬 Comment preview
+        uses: expo/expo-github-action/preview-comment@v7
+        with:
+          channel: pr-${{ github.event.number }}
