@@ -37,14 +37,6 @@ const HomeScreen = () => {
   });
 
   useLayoutEffect(() => {
-    if (
-      profiles.length > 0 &&
-      !profiles.find(
-        (profile) => profile.account.owner === phantomWalletPublicKey
-      )
-    ) {
-      navigation.navigate("Create Account");
-    }
   }, []);
 
   const swipeLeft = async (cardIndex: any) => {
@@ -68,7 +60,7 @@ const HomeScreen = () => {
         >
           <View style={{ height: 290, width: 530 }}></View>
         </LinearGradient>
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Create Account")}>
           <View
             style={[
               styles.button,
@@ -161,7 +153,7 @@ const HomeScreen = () => {
               <NopeIcon width={50} height={50} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity >
+          <TouchableOpacity>
             <View style={styles.button}>
               <BookmarkIcon width={40} height={40} />
             </View>
