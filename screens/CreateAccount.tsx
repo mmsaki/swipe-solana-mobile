@@ -19,8 +19,12 @@ const profilePicture = require("../assets/favicon.png");
 const CreateAccount = (props: any) => {
   const [username, setUsername] = useState("");
   const [uri, setUri] = useState("");
-  const { session , phantomWalletPublicKey, signAndSendTransaction, signMessage } =
-    usePhantomConnection();
+  const {
+    session,
+    phantomWalletPublicKey,
+    signAndSendTransaction,
+    disconnect,
+  } = usePhantomConnection();
   
   const inclompleteProfile = !username || !uri;
 
@@ -94,6 +98,12 @@ const CreateAccount = (props: any) => {
         onPress={handleSubmit}
       >
         <Text style={styles.buttonText}>Create Account</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { bottom: 80 }]}
+        onPress={disconnect}
+      >
+        <Text style={styles.buttonText}>Disconnect</Text>
       </TouchableOpacity>
     </View>
   );
@@ -171,7 +181,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     alignSelf: "center",
-    bottom: 100,
+    bottom: 170,
   },
   buttonText: {
     fontSize: 20,
