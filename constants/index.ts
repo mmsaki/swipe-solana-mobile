@@ -2,7 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 
 export const BASE_URL = "https://phantom.app/ul/v1/";
 export const PROGRAM_ID = new PublicKey(
-  "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN"
+  "DntPpuc8ea7jLLB6CbHSwzEaAtkHKGTuNwiW57tNRXN6"
 );
 
 export const COLORS = {
