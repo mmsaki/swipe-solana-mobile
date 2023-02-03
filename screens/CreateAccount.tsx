@@ -67,7 +67,9 @@ const CreateAccount = (props: any) => {
       programId: new PublicKey(PROGRAM_ID),
     });
     transaction.add(instruction);
-    signAndSendTransaction();
+
+    signAndSendTransaction(transaction);
+    console.log("Transaction sent", transaction);
   };
 
   return (
