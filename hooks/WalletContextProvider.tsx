@@ -320,7 +320,7 @@ export const WalletContextProvider = ({children}: any) => {
 
     addLog("Signing message...");
     const url = buildUrl("signMessage", params);
-    Linking.openURL(url);
+    await Linking.openURL(url);
   };
 
   const memo = useMemo(
