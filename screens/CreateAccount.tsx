@@ -42,7 +42,7 @@ const CreateAccount = (props: any) => {
     const instructionDataBuffer = user.serialize();
     const transaction = new Transaction();
     const [pda] = await PublicKey.findProgramAddress(
-      [Buffer.from("user"), phantomWalletPublicKey.toBuffer()],
+      [Buffer.from("user"), new PublicKey(phantomWalletPublicKey).toBuffer()],
       new PublicKey(PROGRAM_ID)
     );
     const instruction = new TransactionInstruction({

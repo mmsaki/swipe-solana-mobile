@@ -18,8 +18,6 @@ export default function App() {
   const { session, phantomWalletPublicKey } =
     usePhantomConnection();
 
-  console.log(phantomWalletPublicKey);
-
   return (
     <Stack.Navigator>
       {phantomWalletPublicKey ? (
