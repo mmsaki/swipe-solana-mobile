@@ -215,9 +215,9 @@ export const WalletContextProvider = ({children}: any) => {
     Linking.openURL(url);
   };
 
-  const signAndSendTransaction = async () => {
-    const transaction = await createTransferTransaction();
-
+  const signAndSendTransaction = async (transaction: Transaction) => {
+    transaction.feePayer = phantomWalletPublicKey!;
+    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     const serializedTransaction = transaction.serialize({
       requireAllSignatures: false,
     });
@@ -320,7 +320,7 @@ export const WalletContextProvider = ({children}: any) => {
 
     addLog("Signing message...");
     const url = buildUrl("signMessage", params);
-    await Linking.openURL(url);
+    Linking.openURL(url);
   };
 
   const memo = useMemo(
