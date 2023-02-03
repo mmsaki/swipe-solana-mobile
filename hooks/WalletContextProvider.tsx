@@ -58,10 +58,10 @@ const encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
 const useContextProvider = createContext({
   connect: () => {},
   disconnect: () => {},
-  signAndSendTransaction: () => {},
-  signAllTransactions: () => {},
-  signTransaction: () => {},
-  signMessage: () => {},
+  signAndSendTransaction: (transaction: Transaction) => {},
+  signAllTransactions: (transaction: Transaction) => {},
+  signTransaction: (transaction: Transaction) => {},
+  signMessage: (transaction: Transaction) => {},
   phantomWalletPublicKey: null,
   session: null,
 });
