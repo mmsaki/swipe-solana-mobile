@@ -13,17 +13,23 @@ import { User } from "../models/User";
 import { PROGRAM_ID } from "../constants";
 import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import usePhantomConnection from "../hooks/WalletContextProvider";
+import { getProvider, Program } from "@coral-xyz/anchor";
+import { IDL, type Swipe } from "./swipe";
+import { AnchorProvider } from "@coral-xyz/anchor";
 
 const profilePicture = require("../assets/favicon.png");
+
 
 const CreateAccount = (props: any) => {
   const [username, setUsername] = useState("");
   const [uri, setUri] = useState("");
   const {
+    connection,
     session,
     phantomWalletPublicKey,
     signAndSendTransaction,
     disconnect,
+    signAllTransactions,
   } = usePhantomConnection();
   
   const inclompleteProfile = !username || !uri;
@@ -66,17 +72,27 @@ const CreateAccount = (props: any) => {
       data: instructionDataBuffer,
       programId: new PublicKey(PROGRAM_ID),
     });
-    transaction.add(instruction);
+    
+    // const provider = getProvider();
 
-    const transaction2 = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: phantomWalletPublicKey,
-        toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
-        lamports: 100000,
-      })
-    );
+    // const program = new Program(IDL, PROGRAM_ID, provider);
 
-    signAndSendTransaction(transaction);
+    // const tx = await program.methods.createUser(username, uri).accounts({
+    //   owner: new PublicKey(phantomWalletPublicKey),
+    //   user: pda,
+    // }).instruction();
+
+    // transaction.add(tx);
+    
+    const instruction2 = SystemProgram.transfer({
+      fromPubkey: phantomWalletPublicKey,
+      toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
+      lamports: 1000000,
+    });
+    
+    transaction.add(instruction2);
+      
+    await signAndSendTransaction(transaction);
     console.log("Transaction sent", transaction);
   };
 

@@ -10,6 +10,7 @@ export class User {
   }
 
   static borshUserAccountSchema = borsh.struct([
+    borsh.u8("createUser"),
     borsh.str("username"),
     borsh.str("uri"),
   ]);
@@ -22,7 +23,7 @@ export class User {
   ];
 
   borshInstructionSchema = borsh.struct([
-    borsh.u8("variant"),
+    borsh.u8("createUser"),
     borsh.str("username"),
     borsh.str("uri"),
   ]);
