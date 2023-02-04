@@ -5,7 +5,7 @@ import UserSVG from "../assets/SYBIL_FULL.svg";
 import ChatSVG from "../assets/chat-icon.svg";
 import ChatNotification from "../assets/chat-notification.svg";
 import Swiper from "react-native-deck-swiper";
-import { profiles , posts } from "../data";
+import { profiles, posts } from "../data";
 import NopeIcon from "../assets/nope-icon.svg";
 import LoveIcon from "../assets/love-icon.svg";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,6 +14,14 @@ import InfoIcon from "../assets/info-icon.svg";
 import FavoriteIcon from "../assets/favorite-icon.svg";
 import LeaderBoardIcon from "../assets/leaderboard-icon.svg";
 import usePhantomConnection from "../hooks/WalletContextProvider";
+import {
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { PROGRAM_ID } from "../constants";
+import { User } from "../models/User";
 
 interface Profile {
   publicKey: string;
@@ -23,12 +31,15 @@ interface Profile {
     last_post: string;
     matches: string;
     uri: string;
-  },
+  };
 }
 
 const HomeScreen = () => {
+  const [username, setUsername] = useState("");
+  const [uri, setUri] = useState("");
   const navigation = useNavigation();
-  const { phantomWalletPublicKey, signMessage, signAllTransactions } = usePhantomConnection();
+  const { phantomWalletPublicKey, signMessage, signAndSendTransaction } =
+    usePhantomConnection();
   const swipeRef = useRef(null);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,16 +47,64 @@ const HomeScreen = () => {
     });
   });
 
-  useLayoutEffect(() => {
-    if (
-      profiles.length > 0 &&
-      !profiles.find(
-        (profile) => profile.account.owner === phantomWalletPublicKey
-      )
-    ) {
-      navigation.navigate("Create Account");
+  const handleTransaction = async () => {
+    if (!phantomWalletPublicKey) {
+      alert("Please connect your Phantom wallet");
+      return;
     }
-  }, []);
+    const user = new User(username, uri);
+    const instructionDataBuffer = user.serialize();
+    const transaction = new Transaction();
+    const [pda, bump] = await PublicKey.findProgramAddress(
+      [Buffer.from("user"), new PublicKey(phantomWalletPublicKey).toBuffer()],
+      new PublicKey(PROGRAM_ID)
+    );
+    const instruction = new TransactionInstruction({
+      keys: [
+        {
+          pubkey: phantomWalletPublicKey,
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: pda,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+      data: instructionDataBuffer,
+      programId: new PublicKey(PROGRAM_ID),
+    });
+
+    // const provider = getProvider();
+
+    // const program = new Program(IDL, PROGRAM_ID, provider);
+
+    // const tx = await program.methods.createUser(username, uri).accounts({
+    //   owner: new PublicKey(phantomWalletPublicKey),
+    //   user: pda,
+    // }).instruction();
+
+    // transaction.add(tx);
+
+    const instruction2 = SystemProgram.transfer({
+      fromPubkey: phantomWalletPublicKey,
+      toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
+      lamports: 1000000,
+    });
+
+    transaction.add(instruction2);
+
+    await signAndSendTransaction(transaction);
+    console.log("Transaction sent", transaction);
+  };
+
+  useLayoutEffect(() => {}, []);
 
   const swipeLeft = async (cardIndex: any) => {
     if (!posts[cardIndex]) return;
@@ -68,7 +127,7 @@ const HomeScreen = () => {
         >
           <View style={{ height: 290, width: 530 }}></View>
         </LinearGradient>
-        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Create Account")}>
           <View
             style={[
               styles.button,
@@ -78,7 +137,7 @@ const HomeScreen = () => {
             <UserSVG width={80} height={80} />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
+        <TouchableOpacity>
           <View style={styles.topNavButton}>
             <FavoriteIcon width={30} height={30} />
           </View>
@@ -117,7 +176,7 @@ const HomeScreen = () => {
           stackScale={2}
           stackSeparation={10}
           childrenOnTop={true}
-          infinite={false}
+          infinite={true}
           onSwipedLeft={(cardIndex: any) => {
             console.log("PASS");
             swipeLeft(cardIndex);
@@ -125,6 +184,7 @@ const HomeScreen = () => {
           onSwipedRight={(cardIndex: any) => {
             console.log("MATCH");
             swipeRight(cardIndex);
+            handleTransaction();
           }}
           renderCard={(card: any) => {
             return (

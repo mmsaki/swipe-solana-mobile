@@ -13,23 +13,88 @@ import { User } from "../models/User";
 import { PROGRAM_ID } from "../constants";
 import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import usePhantomConnection from "../hooks/WalletContextProvider";
+import { getProvider, Program } from "@coral-xyz/anchor";
+import { IDL, type Swipe } from "./swipe";
+import { AnchorProvider } from "@coral-xyz/anchor";
 
 const profilePicture = require("../assets/favicon.png");
 
 
-const CreateAccount = () => {
+const CreateAccount = (props: any) => {
   const [username, setUsername] = useState("");
   const [uri, setUri] = useState("");
   const {
-    sharedSecret,
-    dappKeyPair,
+    connection,
     session,
     phantomWalletPublicKey,
-    connection,
     signAndSendTransaction,
+    disconnect,
+    signAllTransactions,
   } = usePhantomConnection();
-
+  
   const inclompleteProfile = !username || !uri;
+
+  const handleSubmit = (event: any) => {
+    event.preventDefault();
+    const user = new User(username, uri);
+    handleTransaction(user);
+  };
+
+  const handleTransaction = async (user: User) => {
+    if (!phantomWalletPublicKey) {
+      alert("Please connect your Phantom wallet");
+      return;
+    }
+    const instructionDataBuffer = user.serialize();
+    const transaction = new Transaction();
+    const [pda, bump] = await PublicKey.findProgramAddress(
+      [Buffer.from("user"), new PublicKey(phantomWalletPublicKey).toBuffer()],
+      new PublicKey(PROGRAM_ID)
+    );
+    const instruction = new TransactionInstruction({
+      keys: [
+        {
+          pubkey: phantomWalletPublicKey,
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: pda,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+      data: instructionDataBuffer,
+      programId: new PublicKey(PROGRAM_ID),
+    });
+    
+    // const provider = getProvider();
+
+    // const program = new Program(IDL, PROGRAM_ID, provider);
+
+    // const tx = await program.methods.createUser(username, uri).accounts({
+    //   owner: new PublicKey(phantomWalletPublicKey),
+    //   user: pda,
+    // }).instruction();
+
+    // transaction.add(tx);
+    
+    const instruction2 = SystemProgram.transfer({
+      fromPubkey: phantomWalletPublicKey,
+      toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
+      lamports: 1000000,
+    });
+    
+    transaction.add(instruction2);
+      
+    await signAndSendTransaction(transaction);
+    console.log("Transaction sent", transaction);
+  };
 
   const handleSubmit = async () => {
     if (!phantomWalletPublicKey) return;
@@ -94,6 +159,12 @@ const CreateAccount = () => {
         onPress={handleSubmit}
       >
         <Text style={styles.buttonText}>Create Account</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, { bottom: 80 }]}
+        onPress={disconnect}
+      >
+        <Text style={styles.buttonText}>Disconnect</Text>
       </TouchableOpacity>
     </View>
   );
@@ -170,7 +241,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     alignSelf: "center",
-    bottom: 100,
+    bottom: 170,
   },
   buttonText: {
     fontSize: 20,

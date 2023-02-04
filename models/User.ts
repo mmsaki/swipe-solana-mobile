@@ -10,6 +10,7 @@ export class User {
   }
 
   static borshUserAccountSchema = borsh.struct([
+    borsh.u8("createUser"),
     borsh.str("username"),
     borsh.str("uri"),
   ]);
@@ -22,13 +23,14 @@ export class User {
   ];
 
   borshInstructionSchema = borsh.struct([
+    borsh.u8("createUser"),
     borsh.str("username"),
     borsh.str("uri"),
   ]);
 
   serialize(): Buffer {
     const buffer = Buffer.alloc(1000);
-    this.borshInstructionSchema.encode({ ...this }, buffer);
+    this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
     return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
   }
 

@@ -29,6 +29,13 @@ yarn start
 ```
 4. Scan the QR code present on your terminal with a physical phone. Make sure to [install the Phantom mobile app](https://phantom.app/download)!
 
+## Developement
+
+1. Run build and download app to your iPhone. For ios 16 [enable developer mode](https://docs.expo.dev/guides/ios-developer-mode/).
+
+```bash
+eas build --profile development --platform ios  
+```
 
 ## Acknowledgements
 

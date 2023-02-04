@@ -1,6 +1,6 @@
 import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Login from "./screens/Login";
@@ -15,7 +15,7 @@ import usePhantomConnection from "./hooks/WalletContextProvider";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const { phantomWalletPublicKey } =
+  const { session, phantomWalletPublicKey } =
     usePhantomConnection();
 
   return (

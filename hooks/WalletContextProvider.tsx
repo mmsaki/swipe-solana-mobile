@@ -2,15 +2,9 @@ import "react-native-get-random-values";
 import "react-native-url-polyfill/auto";
 import { Buffer } from "buffer";
 global.Buffer = global.Buffer || Buffer;
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Button, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import * as Linking from "expo-linking";
 import nacl from "tweetnacl";
 import bs58 from "bs58";
@@ -22,36 +16,25 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
+import { AnchorProvider, Wallet } from "@coral-xyz/anchor";
 import Toast from "react-native-toast-message";
 
 const NETWORK = clusterApiUrl("devnet");
 
 const onConnectRedirectLink = Linking.createURL("onConnect");
 const onDisconnectRedirectLink = Linking.createURL("onDisconnect");
-const onSignAndSendTransactionRedirectLink = Linking.createURL(
-  "onSignAndSendTransaction"
-);
-const onSignAllTransactionsRedirectLink = Linking.createURL(
-  "onSignAllTransactions"
-);
+const onSignAndSendTransactionRedirectLink = Linking.createURL("onSignAndSendTransaction");
+const onSignAllTransactionsRedirectLink = Linking.createURL("onSignAllTransactions");
 const onSignTransactionRedirectLink = Linking.createURL("onSignTransaction");
 const onSignMessageRedirectLink = Linking.createURL("onSignMessage");
 
 const buildUrl = (path: string, params: URLSearchParams) =>
   `https://phantom.app/ul/v1/${path}?${params.toString()}`;
 
-const decryptPayload = (
-  data: string,
-  nonce: string,
-  sharedSecret?: Uint8Array
-) => {
+const decryptPayload = (data: string, nonce: string, sharedSecret?: Uint8Array) => {
   if (!sharedSecret) throw new Error("missing shared secret");
 
-  const decryptedData = nacl.box.open.after(
-    bs58.decode(data),
-    bs58.decode(nonce),
-    sharedSecret
-  );
+  const decryptedData = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), sharedSecret);
   if (!decryptedData) {
     throw new Error("Unable to decrypt data");
   }
@@ -73,30 +56,24 @@ const encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
 };
 
 const useContextProvider = createContext({
-  connection: null,
-  connect: () => {},
-  disconnect: () => {},
-  signAndSendTransaction: (transaction: Transaction) => {},
-  signAllTransactions: () => {},
-  signTransaction: () => {},
-  signMessage: () => {},
+  connect: () => Promise<void>,
+  disconnect: () => Promise<void>,
+  signAndSendTransaction: (transaction: Transaction) => Promise<void>,
+  signAllTransactions: (transaction: Transaction) => Promise<void>,
+  signTransaction: (transaction: Transaction) => Promise<void>,
+  signMessage: (transaction: Transaction) => Promise<void>,
   phantomWalletPublicKey: null,
   session: null,
-  sharedSecret: null,
-  dappKeyPair: null,
-  deepLink: null,
+  connection: undefined,
 });
 
-export const WalletContextProvider = ({ children }: any) => {
+export const WalletContextProvider = ({children}: any) => {
   const [deepLink, setDeepLink] = useState<string>("");
   const [logs, setLogs] = useState<string[]>([]);
   const connection = new Connection(NETWORK);
-  const addLog = useCallback(
-    (log: string) => setLogs((logs) => [...logs, "> " + log]),
-    []
-  );
+  const addLog = useCallback((log: string) => setLogs((logs) => [...logs, "> " + log]), []);
   const scrollViewRef = useRef<any>(null);
-
+  
   // store dappKeyPair, sharedSecret, session and account SECURELY on device
   // to avoid having to reconnect users.
   const [dappKeyPair] = useState(nacl.box.keyPair());
@@ -152,57 +129,40 @@ export const WalletContextProvider = ({ children }: any) => {
       setPhantomWalletPublicKey(new PublicKey(connectData.public_key));
 
       addLog(JSON.stringify(connectData, null, 2));
-    }
-    
-    if (/onDisconnect/.test(url.pathname)) {
+    } else if (/onDisconnect/.test(url.pathname)) {
       setPhantomWalletPublicKey(null);
       addLog("Disconnected!");
-    }
-
-    if (/onSignAndSendTransaction/.test(url.pathname)) {
+    } else if (/onSignAndSendTransaction/.test(url.pathname)) {
       const signAndSendTransactionData = decryptPayload(
         params.get("data")!,
         params.get("nonce")!,
         sharedSecret
       );
-      console.log("signAndSendTrasaction: ", signAndSendTransactionData);
-      Toast.show({
-        type: "success",
-        text1: "Added new Account 🤖",
-        text2: signAndSendTransactionData.signature,
-      });
 
       addLog(JSON.stringify(signAndSendTransactionData, null, 2));
-    }
-    
-    if (/onSignAllTransactions/.test(url.pathname)) {
+    } else if (/onSignAllTransactions/.test(url.pathname)) {
       const signAllTransactionsData = decryptPayload(
         params.get("data")!,
         params.get("nonce")!,
         sharedSecret
       );
 
-      const decodedTransactions = signAllTransactionsData.transactions.map(
-        (t: string) => Transaction.from(bs58.decode(t))
+      const decodedTransactions = signAllTransactionsData.transactions.map((t: string) =>
+        Transaction.from(bs58.decode(t))
       );
 
       addLog(JSON.stringify(decodedTransactions, null, 2));
-    }
-    if (/onSignTransaction/.test(url.pathname)) {
+    } else if (/onSignTransaction/.test(url.pathname)) {
       const signTransactionData = decryptPayload(
         params.get("data")!,
         params.get("nonce")!,
         sharedSecret
       );
 
-      const decodedTransaction = Transaction.from(
-        bs58.decode(signTransactionData.transaction)
-      );
+      const decodedTransaction = Transaction.from(bs58.decode(signTransactionData.transaction));
 
       addLog(JSON.stringify(decodedTransaction, null, 2));
-    }
-    
-    if (/onSignMessage/.test(url.pathname)) {
+    } else if (/onSignMessage/.test(url.pathname)) {
       const signMessageData = decryptPayload(
         params.get("data")!,
         params.get("nonce")!,
@@ -214,8 +174,7 @@ export const WalletContextProvider = ({ children }: any) => {
   }, [deepLink]);
 
   const createTransferTransaction = async () => {
-    if (!phantomWalletPublicKey)
-      throw new Error("missing public key from user");
+    if (!phantomWalletPublicKey) throw new Error("missing public key from user");
     let transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: phantomWalletPublicKey,
@@ -226,9 +185,7 @@ export const WalletContextProvider = ({ children }: any) => {
     transaction.feePayer = phantomWalletPublicKey;
     addLog("Getting recent blockhash");
     const anyTransaction: any = transaction;
-    anyTransaction.recentBlockhash = (
-      await connection.getLatestBlockhash()
-    ).blockhash;
+    anyTransaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     return transaction;
   };
 
@@ -282,6 +239,7 @@ export const WalletContextProvider = ({ children }: any) => {
       redirect_link: onSignAndSendTransactionRedirectLink,
       payload: bs58.encode(encryptedPayload),
     });
+    addLog("Sending transaction...");
     const url = buildUrl("signAndSendTransaction", params);
     Linking.openURL(url);
   };
@@ -348,8 +306,7 @@ export const WalletContextProvider = ({ children }: any) => {
   };
 
   const signMessage = async () => {
-    const message =
-      "To avoid digital dognappers, sign below to authenticate with CryptoCorgis.";
+    const message = "To avoid digital dognappers, sign below to authenticate with CryptoCorgis.";
 
     const payload = {
       session,
@@ -380,20 +337,19 @@ export const WalletContextProvider = ({ children }: any) => {
       signMessage,
       phantomWalletPublicKey,
       session,
-      connection,
-      sharedSecret,
-      dappKeyPair,
-      deepLink,
+      connection, 
     }),
-    [phantomWalletPublicKey, session, sharedSecret, connection]
+    [phantomWalletPublicKey, session, sharedSecret]
   );
 
   return (
-    <useContextProvider.Provider value={memo}>
+    <useContextProvider.Provider
+      value={memo}
+    >
       {children}
     </useContextProvider.Provider>
   );
-};
+}
 
 export default function usePhantomConnection() {
   const context = useContext(useContextProvider);
