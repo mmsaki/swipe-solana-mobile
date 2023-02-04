@@ -16,6 +16,7 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
+import { AnchorProvider, Wallet } from "@coral-xyz/anchor";
 
 const NETWORK = clusterApiUrl("devnet");
 
@@ -56,14 +57,15 @@ const encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
 
 
 const useContextProvider = createContext({
-  connect: () => {},
-  disconnect: () => {},
-  signAndSendTransaction: (transaction: Transaction) => {},
-  signAllTransactions: (transaction: Transaction) => {},
-  signTransaction: (transaction: Transaction) => {},
-  signMessage: (transaction: Transaction) => {},
+  connect: () => Promise<void>,
+  disconnect: () => Promise<void>,
+  signAndSendTransaction: (transaction: Transaction) => Promise<void>,
+  signAllTransactions: (transaction: Transaction) => Promise<void>,
+  signTransaction: (transaction: Transaction) => Promise<void>,
+  signMessage: (transaction: Transaction) => Promise<void>,
   phantomWalletPublicKey: null,
   session: null,
+  connection: undefined,
 });
 
 export const WalletContextProvider = ({children}: any) => {
@@ -72,14 +74,14 @@ export const WalletContextProvider = ({children}: any) => {
   const connection = new Connection(NETWORK);
   const addLog = useCallback((log: string) => setLogs((logs) => [...logs, "> " + log]), []);
   const scrollViewRef = useRef<any>(null);
-
+  
   // store dappKeyPair, sharedSecret, session and account SECURELY on device
   // to avoid having to reconnect users.
   const [dappKeyPair] = useState(nacl.box.keyPair());
   const [sharedSecret, setSharedSecret] = useState<Uint8Array>();
   const [session, setSession] = useState<string>();
   const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useState<PublicKey | null>();
-
+  
   useEffect(() => {
     (async () => {
       const initialUrl = await Linking.getInitialURL();
@@ -333,6 +335,7 @@ export const WalletContextProvider = ({children}: any) => {
       signMessage,
       phantomWalletPublicKey,
       session,
+      connection, 
     }),
     [phantomWalletPublicKey, session, sharedSecret]
   );
