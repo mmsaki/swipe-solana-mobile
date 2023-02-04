@@ -1,0 +1,609 @@
+export type Swipe = {
+  version: "0.1.0";
+  name: "swipe";
+  constants: [
+    {
+      name: "USER_TAG";
+      type: "bytes";
+      value: "[117, 115, 101, 114]";
+    },
+    {
+      name: "POST_TAG";
+      type: "bytes";
+      value: "[112, 111, 115, 116]";
+    },
+    {
+      name: "MATCH_TAG";
+      type: "bytes";
+      value: "[109, 97, 116, 99, 104]";
+    }
+  ];
+  instructions: [
+    {
+      name: "createUser";
+      accounts: [
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "user";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "username";
+          type: "string";
+        },
+        {
+          name: "uri";
+          type: "string";
+        }
+      ];
+    },
+    {
+      name: "updateUser";
+      accounts: [
+        {
+          name: "user";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "username";
+          type: "string";
+        },
+        {
+          name: "uri";
+          type: "string";
+        }
+      ];
+    },
+    {
+      name: "createPost";
+      accounts: [
+        {
+          name: "user";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "postAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "title";
+          type: "string";
+        },
+        {
+          name: "image";
+          type: "string";
+        }
+      ];
+    },
+    {
+      name: "updatePost";
+      accounts: [
+        {
+          name: "postAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "title";
+          type: "string";
+        },
+        {
+          name: "image";
+          type: "string";
+        }
+      ];
+    },
+    {
+      name: "deletePost";
+      accounts: [
+        {
+          name: "postAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "likePost";
+      accounts: [
+        {
+          name: "user";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "post";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "matchAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "post";
+          type: "publicKey";
+        }
+      ];
+    },
+    {
+      name: "unmatch";
+      accounts: [
+        {
+          name: "matchAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "owner";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    }
+  ];
+  accounts: [
+    {
+      name: "user";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "owner";
+            type: "publicKey";
+          },
+          {
+            name: "username";
+            type: "string";
+          },
+          {
+            name: "lastPost";
+            type: "u8";
+          },
+          {
+            name: "matches";
+            type: "u32";
+          },
+          {
+            name: "uri";
+            type: "string";
+          }
+        ];
+      };
+    },
+    {
+      name: "post";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "owner";
+            type: "publicKey";
+          },
+          {
+            name: "id";
+            type: "u8";
+          },
+          {
+            name: "title";
+            type: "string";
+          },
+          {
+            name: "image";
+            type: "string";
+          }
+        ];
+      };
+    },
+    {
+      name: "match";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "owner";
+            type: "publicKey";
+          },
+          {
+            name: "user";
+            type: "publicKey";
+          },
+          {
+            name: "image";
+            type: "string";
+          },
+          {
+            name: "title";
+            type: "string";
+          }
+        ];
+      };
+    }
+  ];
+};
+
+export const IDL: Swipe = {
+  version: "0.1.0",
+  name: "swipe",
+  constants: [
+    {
+      name: "USER_TAG",
+      type: "bytes",
+      value: "[117, 115, 101, 114]",
+    },
+    {
+      name: "POST_TAG",
+      type: "bytes",
+      value: "[112, 111, 115, 116]",
+    },
+    {
+      name: "MATCH_TAG",
+      type: "bytes",
+      value: "[109, 97, 116, 99, 104]",
+    },
+  ],
+  instructions: [
+    {
+      name: "createUser",
+      accounts: [
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "user",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "username",
+          type: "string",
+        },
+        {
+          name: "uri",
+          type: "string",
+        },
+      ],
+    },
+    {
+      name: "updateUser",
+      accounts: [
+        {
+          name: "user",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "username",
+          type: "string",
+        },
+        {
+          name: "uri",
+          type: "string",
+        },
+      ],
+    },
+    {
+      name: "createPost",
+      accounts: [
+        {
+          name: "user",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "postAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "title",
+          type: "string",
+        },
+        {
+          name: "image",
+          type: "string",
+        },
+      ],
+    },
+    {
+      name: "updatePost",
+      accounts: [
+        {
+          name: "postAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "title",
+          type: "string",
+        },
+        {
+          name: "image",
+          type: "string",
+        },
+      ],
+    },
+    {
+      name: "deletePost",
+      accounts: [
+        {
+          name: "postAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "likePost",
+      accounts: [
+        {
+          name: "user",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "post",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "matchAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "post",
+          type: "publicKey",
+        },
+      ],
+    },
+    {
+      name: "unmatch",
+      accounts: [
+        {
+          name: "matchAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "owner",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+  ],
+  accounts: [
+    {
+      name: "user",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "owner",
+            type: "publicKey",
+          },
+          {
+            name: "username",
+            type: "string",
+          },
+          {
+            name: "lastPost",
+            type: "u8",
+          },
+          {
+            name: "matches",
+            type: "u32",
+          },
+          {
+            name: "uri",
+            type: "string",
+          },
+        ],
+      },
+    },
+    {
+      name: "post",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "owner",
+            type: "publicKey",
+          },
+          {
+            name: "id",
+            type: "u8",
+          },
+          {
+            name: "title",
+            type: "string",
+          },
+          {
+            name: "image",
+            type: "string",
+          },
+        ],
+      },
+    },
+    {
+      name: "match",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "owner",
+            type: "publicKey",
+          },
+          {
+            name: "user",
+            type: "publicKey",
+          },
+          {
+            name: "image",
+            type: "string",
+          },
+          {
+            name: "title",
+            type: "string",
+          },
+        ],
+      },
+    },
+  ],
+};
