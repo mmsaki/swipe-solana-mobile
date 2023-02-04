@@ -172,7 +172,7 @@ const HomeScreen = () => {
           stackSize={10}
           cardIndex={0}
           disableBottomSwipe={true}
-          backgroundColor={"transparent"}
+          backgroundColor={"transparent"}r
           stackScale={2}
           stackSeparation={10}
           childrenOnTop={true}
@@ -221,7 +221,7 @@ const HomeScreen = () => {
               <NopeIcon width={50} height={50} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity >
             <View style={styles.button}>
               <BookmarkIcon width={40} height={40} />
             </View>

@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { StatusBar } from "expo-status-bar";
-import useGlobalAuth from "../state/useGlobalState";
 import { useNavigation } from "@react-navigation/native";
 import Logo from "../assets/logo.svg";
 import usePhantomConnection from "../hooks/WalletContextProvider";

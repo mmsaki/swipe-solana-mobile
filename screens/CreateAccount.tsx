@@ -96,6 +96,41 @@ const CreateAccount = (props: any) => {
     console.log("Transaction sent", transaction);
   };
 
+  const handleSubmit = async () => {
+    if (!phantomWalletPublicKey) return;
+    const user = new User(username, uri);
+    const buffer = user.serialize();
+    const [pda] = await PublicKey.findProgramAddress(
+      [new PublicKey(phantomWalletPublicKey).toBuffer(), Buffer.from("user")],
+      new PublicKey(PROGRAM_ID)
+    );
+    const instruction = new TransactionInstruction({
+      keys: [
+        {
+          pubkey: new PublicKey(phantomWalletPublicKey),
+          isSigner: true,
+          isWritable: false,
+        },
+        {
+          pubkey: pda,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+      data: buffer,
+      programId: new PublicKey(PROGRAM_ID),
+    });
+    const transaction = new Transaction();
+    transaction.add(instruction);
+
+    const signedTransaction = await signAndSendTransaction(transaction);
+    console.log("signedTransaction", signedTransaction);
+  };
   return (
     <View style={styles.layout}>
       <Text style={styles.header}>Create Account</Text>
@@ -138,7 +173,6 @@ const CreateAccount = (props: any) => {
 export default CreateAccount;
 
 function ProfilePicture(props: any) {
-  const { image } = props;
   return (
     <View>
       <Text style={[styles.labelText, { paddingLeft: -5 }]}>
@@ -215,3 +249,7 @@ const styles = StyleSheet.create({
     color: "#F8F9FD",
   },
 });
+function async() {
+  throw new Error("Function not implemented.");
+}
+

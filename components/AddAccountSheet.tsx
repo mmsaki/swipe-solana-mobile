@@ -9,7 +9,7 @@ import { View, StyleSheet } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { COLORS, PROGRAM_ID } from "../constants";
 import { User } from "../models/User";
-import { Button} from "./Button";
+import Button from "./Button";
 import Input from "./Input";
 
 interface AddReviewSheetProps {
@@ -19,20 +19,18 @@ interface AddReviewSheetProps {
 }
 
 interface InputValues {
-  title: string;
-  rating: string;
-  description: string;
+  username: string;
+  uri: string;
 }
 
 const MAX_RATING = 5;
 
 const INITIAL_STATE = {
-  title: "",
-  rating: "",
-  description: "",
+  username: "",
+  uri: "",
 };
 
-export default function AddReviewSheet({
+export default function AddAccountSheet({
   actionSheetRef,
   phantomWalletPublicKey,
   signAndSendTransaction,
@@ -49,23 +47,17 @@ export default function AddReviewSheet({
 
   const handleChange = (field: keyof InputValues, value: string) => {
     let checkedValue = value;
-    if (field === "rating") {
-      checkedValue = checkRatingLimit(value);
-    }
-    setValues((prevValues) => ({ ...prevValues, [field]: checkedValue }));
-  };
-
+  }
   const handleSubmit = async () => {
     if (!phantomWalletPublicKey) return;
-    const movie = new Movie(
-      values.title,
-      parseInt(values.rating),
-      values.description
+    const user = new User(
+      values.username,
+      values.uri
     );
-    const instructionDataBuffer = movie.serialize();
+    const instructionDataBuffer = user.serialize();
     const transaction = new Transaction();
     const [pda] = await PublicKey.findProgramAddress(
-      [phantomWalletPublicKey.toBuffer(), Buffer.from(movie.title)],
+      [phantomWalletPublicKey.toBuffer(), Buffer.from("user")],
       new PublicKey(PROGRAM_ID)
     );
     const instruction = new TransactionInstruction({
@@ -99,26 +91,20 @@ export default function AddReviewSheet({
       <View style={styles.form}>
         <View style={styles.fields}>
           <Input
-            value={values.title}
+            value={values.username}
             placeholder="Movie title"
             onChangeText={(newText) => handleChange("title", newText)}
           />
           <Input
-            value={values.description}
+            value={values.uri}
             placeholder="Add your review"
             onChangeText={(newText) => handleChange("description", newText)}
-          />
-          <Input
-            value={values.rating}
-            keyboardType="numeric"
-            placeholder="Rating out of 5"
-            onChangeText={(newText) => handleChange("rating", newText)}
           />
         </View>
         <Button
           title="Submit Review"
           onPress={handleSubmit}
-          disabled={!values.title || !values.rating || !values.description}
+          disabled={!values.username || !values.uri}
         />
       </View>
     </ActionSheet>
@@ -137,3 +123,4 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.DARK_GREY,
   },
 });
+

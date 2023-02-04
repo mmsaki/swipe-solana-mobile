@@ -17,6 +17,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 import { AnchorProvider, Wallet } from "@coral-xyz/anchor";
+import Toast from "react-native-toast-message";
 
 const NETWORK = clusterApiUrl("devnet");
 
@@ -54,8 +55,6 @@ const encryptPayload = (payload: any, sharedSecret?: Uint8Array) => {
   return [nonce, encryptedPayload];
 };
 
-
-
 const useContextProvider = createContext({
   connect: () => Promise<void>,
   disconnect: () => Promise<void>,
@@ -80,8 +79,10 @@ export const WalletContextProvider = ({children}: any) => {
   const [dappKeyPair] = useState(nacl.box.keyPair());
   const [sharedSecret, setSharedSecret] = useState<Uint8Array>();
   const [session, setSession] = useState<string>();
-  const [phantomWalletPublicKey, setPhantomWalletPublicKey] = useState<PublicKey | null>();
-  
+  const [phantomWalletPublicKey, setPhantomWalletPublicKey] =
+    useState<PublicKey | null>();
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     (async () => {
       const initialUrl = await Linking.getInitialURL();
@@ -218,25 +219,26 @@ export const WalletContextProvider = ({children}: any) => {
   };
 
   const signAndSendTransaction = async (transaction: Transaction) => {
-    transaction.feePayer = phantomWalletPublicKey!;
-    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    if (!phantomWalletPublicKey) return;
+    setSubmitting(true);
+    transaction.feePayer = phantomWalletPublicKey;
+    transaction.recentBlockhash = (
+      await connection.getLatestBlockhash()
+    ).blockhash;
     const serializedTransaction = transaction.serialize({
       requireAllSignatures: false,
     });
-
     const payload = {
       session,
       transaction: bs58.encode(serializedTransaction),
     };
     const [nonce, encryptedPayload] = encryptPayload(payload, sharedSecret);
-
     const params = new URLSearchParams({
       dapp_encryption_public_key: bs58.encode(dappKeyPair.publicKey),
       nonce: bs58.encode(nonce),
       redirect_link: onSignAndSendTransactionRedirectLink,
       payload: bs58.encode(encryptedPayload),
     });
-
     addLog("Sending transaction...");
     const url = buildUrl("signAndSendTransaction", params);
     Linking.openURL(url);
