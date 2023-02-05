@@ -3,11 +3,7 @@
     "name": "swipe-app",
     "description": "A React Native app that allows users to swipe through solana profiles.",
     "slug": "swipe",
-<<<<<<< HEAD
-    "version": "1.0.1",
-=======
     "version": "1.0.2",
->>>>>>> 41b4169 (bump version to 1.0.2)
     "scheme": "swipe-app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
