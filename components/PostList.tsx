@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Movie } from "../models/User";
+import { User } from "../models/User";
 import { Connection } from "@solana/web3.js";
-import { MovieCoordinator } from "./MovieCoordinator";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import Input from "./Input";
 import { COLORS } from "../constants";
 import { usePrevious } from "../utils/usePrevious";
+import { UserCoordinator } from "./UserCoordinator";
 
-interface MovieListProps {
+interface UserListProps {
   connection: Connection;
 }
 
-export default function MovieList({ connection }: MovieListProps) {
-  const [movies, setMovies] = useState<(Movie | null)[]>([]);
+export default function UserList({ connection }: UserListProps) {
+  const [Users, setUsers] = useState<(User | null)[]>([]);
   const [userInput, setUserInput] = useState({
     page: 1,
     search: "",
@@ -31,20 +31,20 @@ export default function MovieList({ connection }: MovieListProps) {
       shouldReload = true;
     }
 
-    MovieCoordinator.fetchPage(connection, page, 10, search, shouldReload).then(
-      (fetchedMovies) => {
+    UserCoordinator.fetchPage(connection, page, 10, search, shouldReload).then(
+      (fetchedUsers) => {
         console.log(
-          `fetch complete, received ${fetchedMovies.length} new movies`
+          `fetch complete, received ${fetchedUsers.length} new Users`
         );
         shouldReload
-          ? setMovies(fetchedMovies)
-          : setMovies((movies) => [...movies, ...fetchedMovies]);
+          ? setUsers(fetchedUsers)
+          : setUsers((Users) => [...Users, ...fetchedUsers]);
       }
     );
   }, [userInput]);
 
   const handleScroll = () =>
-    movies.length < 10
+    Users.length < 10
       ? null
       : setUserInput((prev) => ({ page: prev.page + 1, search: prev.search }));
 
@@ -55,28 +55,27 @@ export default function MovieList({ connection }: MovieListProps) {
     <View style={{ flexGrow: 1 }}>
       <Input
         value={userInput.search}
-        placeholder="Search movies..."
+        placeholder="Search Users..."
         onChangeText={handleSearch}
       />
       <FlatList
         ItemSeparatorComponent={() => <View style={{ marginTop: 20 }} />}
-        data={movies}
+        data={Users}
         onEndReached={handleScroll}
         contentContainerStyle={styles.list}
         renderItem={({ item, index }) => (
           <View style={styles.item} key={index}>
             <View style={styles.itemHeader}>
-              <Text ellipsizeMode="tail" numberOfLines={1} style={styles.title}>
-                {item?.title}
+              <Text ellipsizeMode="tail" numberOfLines={1} style={styles.username}>
+                {item?.username}
               </Text>
-              <Text style={styles.rating}>{item?.rating}/5</Text>
             </View>
             <Text
               ellipsizeMode="tail"
               numberOfLines={2}
-              style={styles.description}
+              style={styles.uri}
             >
-              {item?.description}
+              {item?.uri}
             </Text>
           </View>
         )}
@@ -86,7 +85,7 @@ export default function MovieList({ connection }: MovieListProps) {
 }
 
 const styles = StyleSheet.create({
-  description: {
+  uri: {
     color: COLORS.LIGHT_GREY,
     fontSize: 14,
   },
@@ -109,12 +108,7 @@ const styles = StyleSheet.create({
     minWidth: "100%",
     flexDirection: "column",
   },
-  rating: {
-    color: COLORS.WHITE,
-    fontWeight: "500",
-    fontSize: 14,
-  },
-  title: {
+  username: {
     color: COLORS.WHITE,
     fontWeight: "600",
     fontSize: 16,
