@@ -6,7 +6,7 @@
     "development": {
       "releaseChannel": "development",
       "developmentClient": true,
-      "distribution": "internal",
+      "distribution": "store",
       "ios": {
         "resourceClass": "m1-medium",
         "credentialsSource": "local" 
