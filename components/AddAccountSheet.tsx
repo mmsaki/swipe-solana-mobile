@@ -5,11 +5,10 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { RefObject, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Button } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { COLORS, PROGRAM_ID } from "../constants";
 import { User } from "../models/User";
-import Button from "./Button";
 import Input from "./Input";
 
 interface AddReviewSheetProps {
@@ -23,8 +22,6 @@ interface InputValues {
   uri: string;
 }
 
-const MAX_RATING = 5;
-
 const INITIAL_STATE = {
   username: "",
   uri: "",
@@ -36,14 +33,6 @@ export default function AddAccountSheet({
   signAndSendTransaction,
 }: AddReviewSheetProps) {
   const [values, setValues] = useState<InputValues>(INITIAL_STATE);
-
-  const checkRatingLimit = (rating: string) => {
-    const parsedRating = parseInt(rating);
-    if (parsedRating > MAX_RATING) {
-      return MAX_RATING.toString();
-    }
-    return rating;
-  };
 
   const handleChange = (field: keyof InputValues, value: string) => {
     let checkedValue = value;
@@ -92,13 +81,13 @@ export default function AddAccountSheet({
         <View style={styles.fields}>
           <Input
             value={values.username}
-            placeholder="Movie title"
-            onChangeText={(newText) => handleChange("title", newText)}
+            placeholder="username"
+            onChangeText={(newText) => handleChange("username", newText)}
           />
           <Input
             value={values.uri}
-            placeholder="Add your review"
-            onChangeText={(newText) => handleChange("description", newText)}
+            placeholder="profile image url link"
+            onChangeText={(newText) => handleChange("uri", newText)}
           />
         </View>
         <Button
