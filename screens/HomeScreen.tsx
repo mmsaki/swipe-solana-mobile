@@ -22,6 +22,8 @@ import {
 } from "@solana/web3.js";
 import { PROGRAM_ID } from "../constants";
 import { User } from "../models/User";
+import { getProvider, Program } from "@project-serum/anchor";
+import { IDL, type Swipe } from "./swipe";
 
 interface Profile {
   publicKey: string;
@@ -81,14 +83,14 @@ const HomeScreen = () => {
       programId: new PublicKey(PROGRAM_ID),
     });
 
-    // const provider = getProvider();
+    const provider = getProvider();
 
-    // const program = new Program(IDL, PROGRAM_ID, provider);
+    const program = new Program(IDL, PROGRAM_ID, provider);
 
-    // const tx = await program.methods.createUser(username, uri).accounts({
-    //   owner: new PublicKey(phantomWalletPublicKey),
-    //   user: pda,
-    // }).instruction();
+    const tx = await program.methods.createUser(username, uri).accounts({
+      owner: new PublicKey(phantomWalletPublicKey),
+      user: pda,
+    }).instruction();
 
     // transaction.add(tx);
 
@@ -176,7 +178,7 @@ const HomeScreen = () => {
           stackScale={2}
           stackSeparation={10}
           childrenOnTop={true}
-          infinite={true}
+          infinite={false}
           onSwipedLeft={(cardIndex: any) => {
             console.log("PASS");
             swipeLeft(cardIndex);

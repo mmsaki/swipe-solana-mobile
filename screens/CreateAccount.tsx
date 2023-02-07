@@ -13,7 +13,7 @@ import { User } from "../models/User";
 import { PROGRAM_ID } from "../constants";
 import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import usePhantomConnection from "../hooks/WalletContextProvider";
-import { getProvider, Program } from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
 import { IDL, type Swipe } from "./swipe";
 import { AnchorProvider } from "@coral-xyz/anchor";
 
@@ -33,13 +33,6 @@ const CreateAccount = (props: any) => {
   } = usePhantomConnection();
   
   const inclompleteProfile = !username || !uri;
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const user = new User(username, uri);
-    handleTransaction(user);
-  };
-
   const handleTransaction = async (user: User) => {
     if (!phantomWalletPublicKey) {
       alert("Please connect your Phantom wallet");
@@ -73,26 +66,28 @@ const CreateAccount = (props: any) => {
       programId: new PublicKey(PROGRAM_ID),
     });
     
-    // const provider = getProvider();
 
-    // const program = new Program(IDL, PROGRAM_ID, provider);
+    const program = new Program(IDL, PROGRAM_ID);
 
-    // const tx = await program.methods.createUser(username, uri).accounts({
-    //   owner: new PublicKey(phantomWalletPublicKey),
-    //   user: pda,
-    // }).instruction();
+    const tx = await program.methods.createUser(username, uri).accounts({
+      owner: new PublicKey(phantomWalletPublicKey),
+      user: pda,
+    }).instruction();
 
-    // transaction.add(tx);
+    transaction.add(tx);
     
-    const instruction2 = SystemProgram.transfer({
-      fromPubkey: phantomWalletPublicKey,
-      toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
-      lamports: 1000000,
-    });
+    // const instruction2 = SystemProgram.transfer({
+    //   fromPubkey: phantomWalletPublicKey,
+    //   toPubkey: new PublicKey("B1GmJpBZeGrW144CcSkHxxHE4yoyXnudNhWoewVDyfnL"),
+    //   lamports: 1000000,
+    // });
     
-    transaction.add(instruction2);
+    // transaction.add(instruction);
       
     await signAndSendTransaction(transaction);
+    console.log("program", program);
+    console.log("pda", pda);
+    console.log("instruction", tx);
     console.log("Transaction sent", transaction);
   };
 
@@ -100,7 +95,7 @@ const CreateAccount = (props: any) => {
     if (!phantomWalletPublicKey) return;
     const user = new User(username, uri);
     const buffer = user.serialize();
-    const [pda] = await PublicKey.findProgramAddress(
+    const [pda, bump] = await PublicKey.findProgramAddress(
       [new PublicKey(phantomWalletPublicKey).toBuffer(), Buffer.from("user")],
       new PublicKey(PROGRAM_ID)
     );
@@ -126,9 +121,26 @@ const CreateAccount = (props: any) => {
       programId: new PublicKey(PROGRAM_ID),
     });
     const transaction = new Transaction();
-    transaction.add(instruction);
+    // transaction.add(instruction);
+
+    const program = new Program(IDL, PROGRAM_ID);
+
+    const tx = await program.methods
+      .createUser(username, uri)
+      .accounts({
+        owner: new PublicKey(phantomWalletPublicKey),
+        user: pda,
+      })
+      .instruction();
+    transaction.add(tx);
 
     const signedTransaction = await signAndSendTransaction(transaction);
+    console.log(new PublicKey(phantomWalletPublicKey));
+    await signAndSendTransaction(transaction);
+    console.log("program", program);
+    console.log("pda", pda);
+    console.log("instruction", tx);
+    console.log("Transaction sent", transaction);
     console.log("signedTransaction", signedTransaction);
   };
   return (
