@@ -4,7 +4,7 @@ A simple social mobile app to meet and chat with friends on the Solana blockchai
 
 Contributors:
 
-- Martins - Graphic Desgin, UX/UI, Project Lead
+- Martins Zemlickis - Graphic Desgin, UX/UI, Project Lead
 - Meek Msaki - Blockchan Developer/Full-Stack Developer
 
 ## What we're building
